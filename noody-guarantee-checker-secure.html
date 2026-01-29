@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noody Guarantee Checker - Secure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #2c5f4f 0%, #1a3a2e 100%);
+            padding: 15px;
+            line-height: 1.5;
+            font-size: 14px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: #2c5f4f;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .login-container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .login-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2c5f4f;
+        }
+
+        .login-btn {
+            background: #2c5f4f;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #234a3d;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .app-container {
+            display: none;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .container {
+            max-width: 100%;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c5f4f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .form-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .form-section h2 {
+            color: #2c5f4f;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 13px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .product-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .add-product-btn {
+            background: #2c5f4f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .check-btn {
+            background: #2c5f4f;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .check-btn:hover {
+            background: #234a3d;
+        }
+
+        .check-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .results.eligible {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .results.not-eligible {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .results h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .result-item strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c5f4f;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .next-steps {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .next-steps ol {
+            margin-left: 15px;
+        }
+
+        .next-steps li {
+            margin-bottom: 6px;
+        }
+
+        .customer-response {
+            background: white;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .customer-response h4 {
+            color: #2c5f4f;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .email-content {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: #2c5f4f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-group {
+            margin: 10px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ffc107;
+            font-size: 13px;
+        }
+
+        .security-notice {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .product-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginContainer" class="login-container">
+        <h1>🔒 Noody Guarantee Checker</h1>
+        <p>Team access only</p>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter team password">
+            </div>
+            
+            <button type="submit" class="login-btn">Access Tool</button>
+        </form>
+        
+        <div class="security-notice">
+            🔐 This tool contains sensitive customer information and is only accessible to authorized Noody team members.
+        </div>
+    </div>
+
+    <!-- Main App (Hidden until logged in) -->
+    <div id="appContainer" class="app-container">
+        <div class="container">
+            <div class="header">
+                <div style="width: 80px;"></div>
+                <h1>Guarantee Checker</h1>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="content">
+                <form id="guaranteeForm">
+                    <div class="form-section">
+                        <h2>Order Info</h2>
+                        
+                        <div class="form-group">
+                            <label for="orderNumber">Order Number *</label>
+                            <input type="text" id="orderNumber" required placeholder="NZ-12345">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerName">Customer Name *</label>
+                            <input type="text" id="customerName" required placeholder="Sarah">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="purchaseDate">Purchase Date *</label>
+                            <input type="date" id="purchaseDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="purchaseChannel">Channel *</label>
+                            <select id="purchaseChannel" required>
+                                <option value="noody.co.nz">noody.co.nz</option>
+                                <option value="Farmers">Farmers</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>Products</h2>
+                        
+                        <div class="warning-box">
+                            <strong>⚠️ Important:</strong> Select product name AND fill in quantity and price.
+                        </div>
+                        
+                        <div id="productsContainer">
+                            <div class="product-row">
+                                <div class="form-group">
+                                    <label>Product *</label>
+                                    <select class="product-name" required>
+                                        <option value="">Select...</option>
+                                        <option value="Calm Balm">Calm Balm</option>
+                                        <option value="Soft Suds">Soft Suds</option>
+                                        <option value="Lotion Potion">Lotion Potion</option>
+                                        <option value="Sun Balm">Sun Balm</option>
+                                        <option value="Cradle Cap Brush">Cradle Cap Brush</option>
+                                        <option value="Calm Balm 3-Pack">Calm Balm 3-Pack</option>
+                                        <option value="Skin Support Bundle">Skin Support Bundle</option>
+                                        <option value="Complete Bundle">Complete Bundle</option>
+                                        <option value="Bedtime Bundle">Bedtime Bundle</option>
+                                        <option value="Gift Set">Gift Set</option>
+                                        <option value="Cradle Cap Bundle">Cradle Cap Bundle</option>
+                                        <option value="Happy Skin Set">Happy Skin Set</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Qty *</label>
+                                    <input type="number" class="product-quantity" min="1" value="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Price ($) *</label>
+                                    <input type="number" class="product-price" step="0.01" min="0" required placeholder="35.00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="add-product-btn" onclick="addProductRow()">+ Add Product</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>History</h2>
+                        
+                        <div class="form-group">
+                            <label for="bundleDiscount">Bundle Discount ($)</label>
+                            <input type="number" id="bundleDiscount" step="0.01" min="0" placeholder="0.00" value="0">
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label><strong>Previously purchased:</strong></label>
+                        </div>
+                        
+                        <div class="checkbox-group" id="previousPurchases">
+                            <label><input type="checkbox" value="Calm Balm"> Calm Balm</label>
+                            <label><input type="checkbox" value="Soft Suds"> Soft Suds</label>
+                            <label><input type="checkbox" value="Lotion Potion"> Lotion Potion</label>
+                            <label><input type="checkbox" value="Sun Balm"> Sun Balm</label>
+                            <label><input type="checkbox" value="Cradle Cap Brush"> Cradle Cap Brush</label>
+                            <label><input type="checkbox" value="Calm Balm 3-Pack"> Calm Balm 3-Pack</label>
+                            <label><input type="checkbox" value="Skin Support Bundle"> Skin Support Bundle</label>
+                            <label><input type="checkbox" value="Complete Bundle"> Complete Bundle</label>
+                            <label><input type="checkbox" value="Bedtime Bundle"> Bedtime Bundle</label>
+                            <label><input type="checkbox" value="Gift Set"> Gift Set</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="check-btn">Check Eligibility</button>
+                </form>
+
+                <div id="results" class="results"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password protection
+        const CORRECT_PASSWORD = 'noody2025'; // CHANGE THIS PASSWORD!
+        const SESSION_KEY = 'noody_checker_auth';
+
+        // Check if already logged in
+        window.addEventListener('load', function() {
+            const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
+            if (isAuthenticated) {
+                showApp();
+            }
+        });
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                showApp();
+            } else {
+                showError('Incorrect password. Please try again.');
+                document.getElementById('password').value = '';
+            }
+        });
+
+        function showApp() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+        }
+
+        function logout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Guarantee Checker Logic (same as before)
+        class GuaranteeChecker {
+            constructor() {
+                this.policy = {
+                    guaranteeTypes: {
+                        thirtyDay: {
+                            name: "30-Day Gentle Start Guarantee",
+                            windowDays: 30,
+                            requiresProof: false,
+                            description: "No questions asked refund"
+                        },
+                        ninetyDay: {
+                            name: "90-Day Calm Skin Promise",
+                            windowDays: 90,
+                            requiresProof: true,
+                            description: "Results guarantee with usage proof required"
+                        }
+                    },
+                    eligibleProducts: [
+                        "Calm Balm", "Soft Suds", "Lotion Potion", "Sun Balm", "Cradle Cap Brush",
+                        "Calm Balm 3-Pack", "Skin Support Bundle", "Complete Bundle", "Bedtime Bundle",
+                        "Gift Set", "Cradle Cap Bundle", "Happy Skin Set"
+                    ]
+                };
+            }
+
+            checkOrder(orderData) {
+                const results = {
+                    eligible: false,
+                    guaranteeType: null,
+                    reasons: [],
+                    warnings: [],
+                    nextSteps: [],
+                    refundAmount: 0
+                };
+
+                if (!this.validateOrderData(orderData, results)) {
+                    return results;
+                }
+
+                this.checkPurchaseChannel(orderData, results);
+                this.checkProductEligibility(orderData, results);
+                this.checkFirstPurchase(orderData, results);
+                this.checkBulkPurchase(orderData, results);
+                this.checkTimeWindow(orderData, results);
+                
+                if (results.eligible) {
+                    this.calculateRefund(orderData, results);
+                    this.provideNextSteps(orderData, results);
+                }
+
+                return results;
+            }
+
+            validateOrderData(orderData, results) {
+                const required = ['orderNumber', 'purchaseDate', 'products', 'purchaseChannel'];
+                const missing = required.filter(field => !orderData[field]);
+                
+                if (missing.length > 0) {
+                    results.reasons.push(`Missing required information: ${missing.join(', ')}`);
+                    return false;
+                }
+                return true;
+            }
+
+            checkPurchaseChannel(orderData, results) {
+                if (orderData.purchaseChannel !== 'noody.co.nz') {
+                    results.reasons.push(
+                        `Not eligible: Purchase made through ${orderData.purchaseChannel}. Only orders from noody.co.nz are covered by our guarantee.`
+                    );
+                    results.eligible = false;
+                }
+            }
+
+            checkProductEligibility(orderData, results) {
+                const ineligibleProducts = orderData.products.filter(
+                    p => !this.policy.eligibleProducts.includes(p.name)
+                );
+
+                if (ineligibleProducts.length > 0) {
+                    results.reasons.push(
+                        `Product(s) not covered: ${ineligibleProducts.map(p => p.name).join(', ')}`
+                    );
+                    results.eligible = false;
+                }
+            }
+
+            checkFirstPurchase(orderData, results) {
+                const productsToCheck = orderData.products.map(p => p.name);
+                const repeatProducts = [];
+
+                productsToCheck.forEach(productName => {
+                    if (orderData.previousPurchases && 
+                        orderData.previousPurchases.includes(productName)) {
+                        repeatProducts.push(productName);
+                    }
+                });
+
+                if (repeatProducts.length > 0) {
+                    results.reasons.push(
+                        `Not a first purchase: ${repeatProducts.join(', ')}. Guarantee only applies to first order of each product.`
+                    );
+                    results.warnings.push(
+                        `Note: Customer's statutory rights under Consumer Guarantees Act 1993 still apply if product is faulty or causes adverse reaction.`
+                    );
+                    results.eligible = false;
+                }
+            }
+
+            checkBulkPurchase(orderData, results) {
+                const bulkProducts = orderData.products.filter(p => {
+                    const hasMultipleQuantity = p.quantity > 1;
+                    const isMultiPack = /\d+-pack/i.test(p.name) || p.name.toLowerCase().includes('pack');
+                    return hasMultipleQuantity || isMultiPack;
+                });
+                
+                if (bulkProducts.length > 0) {
+                    results.warnings.push(
+                        `Bulk purchase detected: ${bulkProducts.map(p => 
+                            `${p.name} ${p.quantity > 1 ? `(qty: ${p.quantity})` : ''}`
+                        ).join(', ')}. Only one unit per product type can be refunded under the guarantee. Additional unused units can be returned for refund.`
+                    );
+                    
+                    if (!results.reasons.some(r => r.includes('Not eligible'))) {
+                        results.eligible = true;
+                    }
+                }
+            }
+
+            checkTimeWindow(orderData, results) {
+                const purchaseDate = new Date(orderData.purchaseDate);
+                const today = new Date();
+                const daysSincePurchase = Math.floor(
+                    (today - purchaseDate) / (1000 * 60 * 60 * 24)
+                );
+
+                orderData.daysSincePurchase = daysSincePurchase;
+
+                if (daysSincePurchase <= 30) {
+                    results.eligible = true;
+                    results.guaranteeType = '30-Day Gentle Start';
+                    results.reasons.push(
+                        `✓ Within 30-day window (${daysSincePurchase} days since purchase)`
+                    );
+                } else if (daysSincePurchase <= 90) {
+                    results.eligible = true;
+                    results.guaranteeType = '90-Day Calm Skin Promise';
+                    results.reasons.push(
+                        `✓ Within 90-day window (${daysSincePurchase} days since purchase)`
+                    );
+                    results.warnings.push(
+                        `⚠️ 90-Day guarantee requires proof: photos showing consistent use and brief description of usage.`
+                    );
+                } else {
+                    results.reasons.push(
+                        `Outside guarantee window: ${daysSincePurchase} days since purchase (maximum 90 days)`
+                    );
+                    results.warnings.push(
+                        `Statutory rights under Consumer Guarantees Act 1993 may still apply if product is faulty or doesn't match description.`
+                    );
+                    results.eligible = false;
+                }
+            }
+
+            calculateRefund(orderData, results) {
+                let refundTotal = 0;
+                let refundDetails = [];
+                
+                orderData.products.forEach(product => {
+                    const isMultiPack = /\d+-pack/i.test(product.name) || product.name.toLowerCase().includes('pack');
+                    
+                    if (isMultiPack) {
+                        const packMatch = product.name.match(/(\d+)-pack/i);
+                        const packSize = packMatch ? parseInt(packMatch[1]) : 1;
+                        const unitPrice = product.price / packSize;
+                        
+                        refundTotal += unitPrice;
+                        refundDetails.push(`${product.name}: One unit under guarantee ($${unitPrice.toFixed(2)})`);
+                    } else {
+                        const refundQuantity = Math.min(product.quantity, 1);
+                        refundTotal += product.price * refundQuantity;
+                        refundDetails.push(`${product.name}: ${refundQuantity} unit ($${(product.price * refundQuantity).toFixed(2)})`);
+                    }
+                });
+
+                if (orderData.bundleDiscount) {
+                    refundTotal -= orderData.bundleDiscount;
+                }
+
+                results.refundAmount = refundTotal;
+                results.refundDetails = refundDetails;
+                results.reasons.push(
+                    `Refund amount: $${refundTotal.toFixed(2)} (excludes shipping costs)`
+                );
+            }
+
+            provideNextSteps(orderData, results) {
+                results.nextSteps = [
+                    "Email customer with refund approval",
+                    "Provide return shipping instructions",
+                    "Customer ships product back at their expense"
+                ];
+
+                if (results.guaranteeType === '90-Day Calm Skin Promise') {
+                    results.nextSteps.push(
+                        "Verify usage photos and description received",
+                        "Process refund once product received (5 business days)"
+                    );
+                } else {
+                    results.nextSteps.push(
+                        "Process refund once product received (5 business days)"
+                    );
+                }
+
+                results.nextSteps.push(
+                    "Refund will appear in customer's account 3-7 days after processing"
+                );
+            }
+
+            generateCustomerResponse(orderData, checkResult) {
+                const productNames = orderData.products.map(p => p.name).join(', ');
+                
+                if (!checkResult.eligible) {
+                    return this.generateRejectionMessage(orderData, checkResult, productNames);
+                }
+
+                return this.generateApprovalMessage(orderData, checkResult, productNames);
+            }
+
+            generateApprovalMessage(orderData, checkResult, productNames) {
+                let subject = `Refund Approved - Order #${orderData.orderNumber}`;
+                
+                const hasMultiPack = orderData.products.some(p => 
+                    /\d+-pack/i.test(p.name) || p.name.toLowerCase().includes('pack')
+                );
+                const hasBulk = orderData.products.some(p => p.quantity > 1);
+                
+                let message = `Subject: ${subject}\n\n`;
+                message += `Hi ${orderData.customerName},\n\n`;
+                message += `Thanks for reaching out about your ${productNames}.\n\n`;
+                message += `We're sorry it didn't work out for your little one. Your refund request is approved under our ${checkResult.guaranteeType} Guarantee.\n\n`;
+                
+                if (checkResult.guaranteeType === '90-Day Calm Skin Promise') {
+                    message += `Before we process this, we'll need:\n`;
+                    message += `- A few photos showing consistent use (e.g., product at different stages)\n`;
+                    message += `- A brief description of how you used it\n\n`;
+                    message += `This helps us understand what worked and what didn't so we can keep improving.\n\n`;
+                }
+                
+                message += `Here's what happens next:\n`;
+                message += `1. Reply to this email with your return confirmation\n`;
+                message += `2. Send the product back to:\n`;
+                message += `   Noody Ltd\n`;
+                message += `   3 Oracle Drive\n`;
+                message += `   Albany, Auckland 0632\n\n`;
+                message += `3. We'll refund $${checkResult.refundAmount.toFixed(2)} within 5 business days of receiving it\n`;
+                message += `4. The money will appear in your account 3-7 days after that\n\n`;
+                
+                if (hasMultiPack || hasBulk) {
+                    message += `Important: As per our guarantee policy, we can only refund one unit per product type under the guarantee. `;
+                    if (hasMultiPack) {
+                        message += `Since you purchased a multi-pack, we'll refund the cost of one unit from the pack. `;
+                    }
+                    message += `Any additional unused units can be returned for a refund of those items.\n\n`;
+                }
+                
+                message += `You'll need to cover return shipping costs, but we'll send you clear instructions.\n\n`;
+                message += `You can review our full guarantee policy here: https://www.noody.co.nz/pages/our-guarantee\n\n`;
+                message += `If you have any questions, just reply to this email.\n\n`;
+                message += `All the best,\nThe Noody Team`;
+                
+                return message;
+            }
+
+            generateRejectionMessage(orderData, checkResult, productNames) {
+                let subject = `Re: Refund Request - Order #${orderData.orderNumber}`;
+                
+                let message = `Subject: ${subject}\n\n`;
+                message += `Hi ${orderData.customerName},\n\n`;
+                message += `Thanks for reaching out about your ${productNames}.\n\n`;
+                message += `I've reviewed your order and unfortunately it doesn't qualify for our money-back guarantee because:\n\n`;
+                
+                checkResult.reasons.forEach(reason => {
+                    if (reason.includes('Not eligible') || reason.includes('Outside guarantee')) {
+                        message += `• ${reason}\n`;
+                    }
+                });
+                
+                message += `\n`;
+                
+                if (checkResult.warnings.some(w => w.includes('Consumer Guarantees Act'))) {
+                    message += `That said, your statutory rights under the Consumer Guarantees Act 1993 still apply. `;
+                    message += `If the product is faulty, doesn't match its description, or caused an adverse reaction, `;
+                    message += `we absolutely want to make it right.\n\n`;
+                    message += `Can you tell me more about what happened? I'm here to help.\n\n`;
+                } else {
+                    message += `I know this isn't what you were hoping to hear. If there's anything else `;
+                    message += `we can do to support you, please let me know.\n\n`;
+                }
+                
+                message += `You can review our full guarantee policy here: https://www.noody.co.nz/pages/our-guarantee\n\n`;
+                message += `All the best,\nThe Noody Team`;
+                
+                return message;
+            }
+        }
+
+        const checker = new GuaranteeChecker();
+
+        function addProductRow() {
+            const container = document.getElementById('productsContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'product-row';
+            newRow.innerHTML = `
+                <div class="form-group">
+                    <label>Product *</label>
+                    <select class="product-name" required>
+                        <option value="">Select...</option>
+                        <option value="Calm Balm">Calm Balm</option>
+                        <option value="Soft Suds">Soft Suds</option>
+                        <option value="Lotion Potion">Lotion Potion</option>
+                        <option value="Sun Balm">Sun Balm</option>
+                        <option value="Cradle Cap Brush">Cradle Cap Brush</option>
+                        <option value="Calm Balm 3-Pack">Calm Balm 3-Pack</option>
+                        <option value="Skin Support Bundle">Skin Support Bundle</option>
+                        <option value="Complete Bundle">Complete Bundle</option>
+                        <option value="Bedtime Bundle">Bedtime Bundle</option>
+                        <option value="Gift Set">Gift Set</option>
+                        <option value="Cradle Cap Bundle">Cradle Cap Bundle</option>
+                        <option value="Happy Skin Set">Happy Skin Set</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Qty *</label>
+                    <input type="number" class="product-quantity" min="1" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Price ($) *</label>
+                    <input type="number" class="product-price" step="0.01" min="0" required placeholder="35.00">
+                </div>
+                <button type="button" class="remove-btn" onclick="removeProductRow(this)">Remove</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function removeProductRow(button) {
+            button.closest('.product-row').remove();
+        }
+
+        document.getElementById('guaranteeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('.check-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Checking...';
+            submitBtn.disabled = true;
+
+            try {
+                const orderData = {
+                    orderNumber: document.getElementById('orderNumber').value,
+                    customerName: document.getElementById('customerName').value,
+                    purchaseDate: document.getElementById('purchaseDate').value,
+                    purchaseChannel: document.getElementById('purchaseChannel').value,
+                    bundleDiscount: parseFloat(document.getElementById('bundleDiscount').value) || 0,
+                    products: [],
+                    previousPurchases: []
+                };
+
+                const productRows = document.querySelectorAll('.product-row');
+                productRows.forEach(row => {
+                    const name = row.querySelector('.product-name').value;
+                    const quantity = parseInt(row.querySelector('.product-quantity').value);
+                    const price = parseFloat(row.querySelector('.product-price').value);
+                    
+                    if (name && quantity && price) {
+                        orderData.products.push({ name, quantity, price });
+                    }
+                });
+                
+                if (orderData.products.length === 0) {
+                    alert('⚠️ Please select at least one product and fill in the quantity and price!');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                const checkboxes = document.querySelectorAll('#previousPurchases input[type="checkbox"]:checked');
+                checkboxes.forEach(cb => {
+                    orderData.previousPurchases.push(cb.value);
+                });
+
+                const result = checker.checkOrder(orderData);
+                const customerResponse = checker.generateCustomerResponse(orderData, result);
+
+                displayResults(orderData, result, customerResponse);
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            } catch (error) {
+                console.error('Error processing form:', error);
+                alert('An error occurred: ' + error.message);
+                
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayResults(orderData, result, customerResponse) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = 'results ' + (result.eligible ? 'eligible' : 'not-eligible');
+
+            let html = `
+                <h3>${result.eligible ? '✓ Refund Approved' : '✗ Not Eligible for Guarantee'}</h3>
+            `;
+
+            if (result.guaranteeType) {
+                html += `
+                    <div class="result-item">
+                        <strong>Guarantee Type:</strong>
+                        ${result.guaranteeType}
+                    </div>
+                `;
+            }
+
+            if (result.refundAmount > 0) {
+                html += `
+                    <div class="result-item">
+                        <strong>Refund Amount:</strong>
+                        $${result.refundAmount.toFixed(2)} (excludes shipping)
+                    </div>
+                `;
+            }
+
+            html += `<div class="result-item"><strong>Decision Details:</strong><ul style="margin-left: 20px; margin-top: 10px;">`;
+            result.reasons.forEach(reason => {
+                html += `<li>${reason}</li>`;
+            });
+            html += `</ul></div>`;
+
+            if (result.warnings.length > 0) {
+                result.warnings.forEach(warning => {
+                    html += `<div class="warning">${warning}</div>`;
+                });
+            }
+
+            if (result.nextSteps.length > 0) {
+                html += `
+                    <div class="next-steps">
+                        <strong>Next Steps:</strong>
+                        <ol style="margin-top: 10px;">
+                `;
+                result.nextSteps.forEach(step => {
+                    html += `<li>${step}</li>`;
+                });
+                html += `</ol></div>`;
+            }
+
+            html += `
+                <div class="customer-response">
+                    <h4>📧 Ready-to-Send Email</h4>
+                    <div class="email-content" id="emailContent">${customerResponse}</div>
+                    <button class="copy-btn" onclick="copyEmail()">Copy Email</button>
+                </div>
+            `;
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyEmail() {
+            const emailContent = document.getElementById('emailContent').textContent;
+            navigator.clipboard.writeText(emailContent).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        document.getElementById('purchaseDate').valueAsDate = new Date();
+    </script>
+</body>
+</html>
